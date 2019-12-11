@@ -9,6 +9,13 @@ class Contacts(object):
     def __init__(self, client):
         self.client = client
 
+    def list(self, data=None):
+        if data is None:
+            aditional_data = {}
+        else:
+            aditional_data = list(data.items())
+        return self.client._get('contact_list', aditional_data=aditional_data)
+
     def create_contact(self, data):
         """
         :param data: A dictionary with the parameters
@@ -107,10 +114,16 @@ class Contacts(object):
         return self.client._post("contact_edit", data=data)
 
     def view_contact_email(self, email):
-        return self.client._get("contact_view_email", aditional_data=[('email',email)])
+        return self.client._get("contact_view_email", aditional_data=[('email', email)])
 
     def view_contact(self, id):
         return self.client._get("contact_view", aditional_data=[('id', id)])
 
     def delete_contact(self, id):
         return self.client._get("contact_delete", aditional_data=[('id', id)])
+
+    def add_tag(self, data):
+        return self.client._post("contact_tag_add", data=data)
+
+    def remove_tag(self, data):
+        return self.client._post("contact_tag_remove", data=data)
