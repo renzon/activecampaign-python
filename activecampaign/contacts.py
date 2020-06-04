@@ -3,6 +3,7 @@ The contacts module provides functionality for working with contacts in your
 ActiveCampaign account.
 Documentation: https://www.activecampaign.com/api/overview.php
 """
+import requests
 
 
 class Contacts(object):
@@ -127,3 +128,31 @@ class Contacts(object):
 
     def remove_tag(self, data):
         return self.client._post("contact_tag_remove", data=data)
+
+    def update_list_status(self, list_id, contact_id, status):
+        """
+        Updates user's status on a list. 1 means subscribed, 0 unsubscribed
+
+        This is no available on API v.1 this it will use API v3:
+        https://developers.activecampaign.com/reference#update-list-status-for-contact
+
+        :param list_id: list id
+        :param contact_id: contact id
+        :param status: status number
+        :return: json response
+        """
+
+        url = self.client._base_url + '/api/3/contactLists'
+        token = self.client._apikey
+        return requests.post(
+            url,
+            headers={'Api-Token': token},
+            json={
+                'contactList':{
+                    'list': list_id,
+                    'contact': contact_id,
+                    'status':status
+                }
+            }
+
+        )
